@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void reset(){
     setState((){
+      _isBusy = false;
       _statusText = "";
       _alerts.clear();
     });
@@ -84,8 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
           padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
           child: Column(children: <Widget>[
             Container(
               padding: const EdgeInsets.only(left: 10),
@@ -162,33 +161,52 @@ class AlertWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.vertical,
-      children: List.generate(alerts.length, (index) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          color: alerts[index].severity.toLowerCase() == "severe" ? Colors.deepOrange : Colors.amber),
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              alerts[index].severity.toLowerCase() == "severe" ? const Icon(Icons.warning, color: Colors.white) : const Icon(Icons.info, color: Colors.white),
-              Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                      child: Text(alerts[index].headline,
-                        style: const TextStyle(color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                          maxLines: 4,
-                            overflow: TextOverflow.fade)
-                  )
-              ),
-            ],
-          )
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      if (constraints.maxWidth > 540) {
+        return GridView.count(
+          crossAxisCount: 4,
+            children: List.generate(alerts.length, (index) => AlertBox(alert: alerts[index]))
         );
-      }),
+      } else {
+        return ListView(
+          scrollDirection: Axis.vertical,
+          children: List.generate(alerts.length, (index) {
+            return AlertBox(alert: alerts[index]);
+          }),
+        );
+      }
+    });
+  }
+}
+
+class AlertBox extends StatelessWidget {
+  final Alert alert;
+  const AlertBox({Key? key, required this.alert}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            color: alert.severity.toLowerCase() == "severe" ? Colors.deepOrange : Colors.amber),
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            alert.severity.toLowerCase() == "severe" ? const Icon(Icons.warning, color: Colors.white) : const Icon(Icons.info, color: Colors.white),
+            Expanded(
+              child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(alert.headline,
+                        style: const TextStyle(color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.fade)
+              )
+            ),
+          ],
+        )
     );
   }
 }
