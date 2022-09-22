@@ -166,10 +166,27 @@ class AlertWidget extends StatelessWidget {
       scrollDirection: Axis.vertical,
       children: List.generate(alerts.length, (index) {
         return Container(
-          color: Colors.deepPurple[50],
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          color: alerts[index].severity.toLowerCase() == "severe" ? Colors.deepOrange : Colors.amber),
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
-          child: Text(alerts[index].headline),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              alerts[index].severity.toLowerCase() == "severe" ? const Icon(Icons.warning, color: Colors.white) : const Icon(Icons.info, color: Colors.white),
+              Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                      child: Text(alerts[index].headline,
+                        style: const TextStyle(color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                          maxLines: 4,
+                            overflow: TextOverflow.fade)
+                  )
+              ),
+            ],
+          )
         );
       }),
     );
