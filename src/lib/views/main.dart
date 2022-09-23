@@ -1,9 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'alerts_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  runZonedGuarded(() {
+    runApp(const ProviderScope(child: MyApp()));
+    }, (error, stack) {
+    throw error;
+  });
 }
 
 class MyApp extends StatelessWidget {

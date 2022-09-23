@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_wx/services/alert_service.dart';
 import 'package:flutter_wx/viewmodels/main_viewmodel.dart';
 import 'package:flutter_wx/views/widgets/alerts_widget.dart';
 
 import '../util/text_helpers.dart';
 
-class AlertsPage extends StatelessWidget {
-  final MainViewModel viewModel = MainViewModel(service: AlertService());
+final alertsProvider = ChangeNotifierProvider((ref) => MainViewModel(service: AlertService()));
+
+class AlertsPage extends ConsumerWidget {
+
+
   AlertsPage({Key? key}) : super(key: key);
 
   final TextEditingController _controller = TextEditingController();
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-      title: Text(viewModel.title),
+      title: Text(ref.watch(alertsProvider).title),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -48,25 +52,25 @@ class AlertsPage extends StatelessWidget {
                   icon: const Icon(Icons.cancel),
                   onPressed: () async {
                   _controller.clear();
-                  await viewModel.getAlerts("x");
+                  await ref.watch(alertsProvider).getAlerts("x");
                   }),
                 ),
                 onChanged: (stateCode) async {
                   if(stateCode.length < 2) {
                     return;
                   }
-                  await viewModel.getAlerts(stateCode);
+                  await ref.watch(alertsProvider).getAlerts(stateCode);
                 },
               ),
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              child: Text(viewModel.status),
+              child: Text(ref.watch(alertsProvider).status),
               ),
-          viewModel.isBusy
+          ref.watch(alertsProvider).isBusy
             ? const CircularProgressIndicator()
             : Expanded(
-              child: AlertsWidget(alerts: viewModel.alerts)
+              child: AlertsWidget(alerts: ref.watch(alertsProvider).alerts)
           )
         ]),
       ), // This trailing comma makes auto-formatting nicer for build methods.

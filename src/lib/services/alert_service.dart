@@ -16,7 +16,7 @@ class AlertService {
     final List features = map["features"];
 
     if (kDebugMode) {
-      print("Found ${features.length} alerts for $stateCode");
+      print("[Service] Found ${features.length} alerts for $stateCode");
     }
     return List.generate(features.length, (index) => Alert.fromJson(features[index]["properties"]!));
   }
