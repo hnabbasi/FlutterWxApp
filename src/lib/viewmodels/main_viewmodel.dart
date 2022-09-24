@@ -30,6 +30,7 @@ class MainViewModel extends ChangeNotifier {
   List<Alert> _alerts = List.empty();
   List<Alert> get alerts => _alerts;
   set alerts(List<Alert> alerts) {
+    alerts.sort((a,b) => a.severity.toInt.compareTo(b.severity.toInt));
     _alerts = alerts;
     notifyListeners();
   }

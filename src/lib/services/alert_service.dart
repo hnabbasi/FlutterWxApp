@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../models/alert.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_wx/constants/api.dart';
+import 'package:flutter_wx/configs/api.dart';
 
 class AlertService {
   Future<List<Alert>> geAlerts(String stateCode) async {

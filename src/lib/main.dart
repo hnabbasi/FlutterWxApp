@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'alerts_view.dart';
+import 'views/alerts_view.dart';
 
 void main() {
   runZonedGuarded(() {
