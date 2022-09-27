@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_wx/services/alert_service.dart';
+import 'package:flutter_wx/services/alerts/alert_service.dart';
 
-import '../models/alert.dart';
+import '../../models/alert.dart';
 
-class MainViewModel extends ChangeNotifier {
-  final AlertService service;
+class AlertsViewModel extends ChangeNotifier {
 
   bool _isBusy = false;
   bool get isBusy => _isBusy;
@@ -35,14 +34,16 @@ class MainViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  MainViewModel({required this.service}){
+  final AlertService alertService;
+
+  AlertsViewModel({required this.alertService}){
     title = "Weather Alerts";
   }
 
   Future<void> getAlerts(String stateCode) async {
     try{
       isBusy = true;
-      alerts = await service.geAlerts(stateCode.toUpperCase());
+      alerts = await alertService.geAlerts(stateCode.toUpperCase());
       status = alerts.isNotEmpty ? "Found ${alerts.length} active alerts" : "No active alerts found";
     } catch(ex) {
       if(kDebugMode) {

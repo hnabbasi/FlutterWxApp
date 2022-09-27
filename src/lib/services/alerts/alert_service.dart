@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import '../models/alert.dart';
+import '../../models/alert.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_wx/configs/api.dart';
 
-class AlertService {
+class AlertService extends ChangeNotifier {
   Future<List<Alert>> geAlerts(String stateCode) async {
     final res = await http.get(Uri(scheme:Api.scheme, host: Api.host, path:"${Api.alerts}/$stateCode"));
     if(res.statusCode != 200){
