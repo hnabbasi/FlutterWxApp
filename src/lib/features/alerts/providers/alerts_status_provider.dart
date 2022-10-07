@@ -10,8 +10,7 @@ final alertsStatusProvider = StateProvider<String>((ref) {
     return "";
   }
 
-  final alerts = ref.watch(alertsCountProvider);
-  return alerts > 0
+  return ref.watch(alertsCountProvider) > 0
       ? "Found ${ref.watch(alertsCountProvider)} alerts"
       : "No active alerts found.";
 });
