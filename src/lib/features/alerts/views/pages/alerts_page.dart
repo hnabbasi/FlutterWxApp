@@ -13,6 +13,11 @@ class AlertsPage extends ConsumerWidget {
 
   AlertsPage({Key? key}) : super(key: key);
 
+  void reset(WidgetRef ref){
+    _controller.clear();
+    ref.invalidate(stateCodeProvider);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -51,12 +56,14 @@ class AlertsPage extends ConsumerWidget {
                       color: Colors.blueGrey,
                       icon: const Icon(Icons.cancel),
                       onPressed: () {
-                        _controller.clear();
-                        ref.invalidate(stateCodeProvider);
+                        reset(ref);
                       },
                     )
                 ),
                 onChanged: (stateCode) async {
+                  if(stateCode.isEmpty) {
+                    reset(ref);
+                  }
                   if(stateCode.length < 2) {
                     return;
                   }

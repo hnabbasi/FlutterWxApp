@@ -6,12 +6,7 @@ import 'alerts_repository_provider.dart';
 
 final alertsProvider = FutureProvider<List<Alert>>((ref) async {
   var stateCode = ref.watch(stateCodeProvider);
-
   final alerts = await ref.watch(alertsRepositoryProvider).getAlerts(stateCode);
-
-  if(alerts.isNotEmpty){
-    alerts.sort((a,b) => a.severity.toInt.compareTo(b.severity.toInt));
-  }
-
+  alerts.sort((a,b) => a.severity.toInt.compareTo(b.severity.toInt));
   return alerts;
 });
