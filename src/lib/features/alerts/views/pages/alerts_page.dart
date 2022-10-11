@@ -55,6 +55,9 @@ class AlertsPage extends StatelessWidget {
                     )
                 ),
                 onChanged: (stateCode) async {
+                  if(stateCode.isEmpty){
+                    BlocProvider.of<AlertsCubit>(context).reset();
+                  }
                   if(stateCode.length < 2) {
                     return;
                   }

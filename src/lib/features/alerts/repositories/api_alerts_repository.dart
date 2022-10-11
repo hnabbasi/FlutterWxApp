@@ -21,7 +21,7 @@ class ApiAlertsRepository implements AlertsRepository {
     final List features = map["features"];
 
     if(kDebugMode){
-      print("[Repository] Found ${features.length} alerts");
+      print("[Repository] Found ${features.length} alerts for $stateCode");
     }
 
     return List.generate(features.length, (index) => Alert.fromJson(features[index]["properties"]!));
