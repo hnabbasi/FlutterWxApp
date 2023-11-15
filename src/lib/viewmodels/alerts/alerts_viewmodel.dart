@@ -44,12 +44,21 @@ class AlertsViewModel extends ChangeNotifier {
     try{
       isBusy = true;
       alerts = await alertService.geAlerts(stateCode.toUpperCase());
-      status = alerts.isNotEmpty ? "Found ${alerts.length} active alerts" : "No active alerts found";
+      status = alerts.isNotEmpty
+          ? "Found ${alerts.length} active alerts"
+          : "No active alerts found";
     } catch(ex) {
       if(kDebugMode) {
         print(ex);
       }
+    } finally {
+      isBusy = false;
     }
+  }
+
+  void clearAlerts(){
     isBusy = false;
+    alerts = List.empty();
+    status = "";
   }
 }

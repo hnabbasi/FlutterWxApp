@@ -10,66 +10,71 @@ class AlertsPage extends StatelessWidget {
   AlertsPage({Key? key}) : super(key: key);
 
   final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AlertsViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
-      title: Text(viewModel.title),
+      title: Consumer<AlertsViewModel>(
+        builder: (context, provider, child) => Text(provider.title)
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: Column(children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(left: 10),
-            decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-              color: Colors.grey,
-              offset: Offset(1,1),
-              blurRadius: 1.0)
-            ]),
-            child: TextField(
-              controller: _controller,
-              style: const TextStyle(color: Colors.blueGrey, fontSize: 18),
-              textCapitalization: TextCapitalization.characters,
-              inputFormatters: [
-              LengthLimitingTextInputFormatter(2),
-              UpperCaseTextFormatter(),
-              ],
-              decoration: InputDecoration(
-                hintText: "ex. TX",
-                hintStyle: const TextStyle(color: Colors.blueGrey),
-                border: InputBorder.none,
-                suffix: IconButton(
-                  color: Colors.blueGrey,
-                  icon: const Icon(Icons.cancel),
-                  onPressed: () async {
-                  _controller.clear();
-                  await viewModel.getAlerts("x");
-                  }),
+        child: Consumer<AlertsViewModel>(
+            builder: (context, provider, child) =>
+                Column(children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(1,1),
+                      blurRadius: 1.0)
+                    ]),
+                    child: TextField(
+                      controller: _controller,
+                      style: const TextStyle(color: Colors.blueGrey, fontSize: 18),
+                      textCapitalization: TextCapitalization.characters,
+                      inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                      UpperCaseTextFormatter(),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: "ex. TX",
+                        hintStyle: const TextStyle(color: Colors.blueGrey),
+                        border: InputBorder.none,
+                        suffix: IconButton(
+                          color: Colors.blueGrey,
+                          icon: const Icon(Icons.cancel),
+                          onPressed: () {
+                          _controller.clear();
+                          provider.clearAlerts();
+                          }),
+                        ),
+                        onChanged: (stateCode) async {
+                          if(stateCode.length < 2) {
+                            return;
+                          }
+                          await provider.getAlerts(stateCode);
+                        },
+                      )
                 ),
-                onChanged: (stateCode) async {
-                  if(stateCode.length < 2) {
-                    return;
-                  }
-                  await viewModel.getAlerts(stateCode);
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: Text(viewModel.status),
-              ),
-          viewModel.isBusy
-            ? const CircularProgressIndicator()
-            : Expanded(
-              child: AlertsWidget(alerts: viewModel.alerts)
-          )
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(provider.status),
+                  ),
+                  provider.isBusy
+                      ? const CircularProgressIndicator()
+                      : Expanded(
+                      child: AlertsWidget(alerts: provider.alerts)
+                  ),
         ]),
+      ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
