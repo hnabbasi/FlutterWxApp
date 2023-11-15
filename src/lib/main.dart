@@ -40,22 +40,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final TextEditingController _controller = TextEditingController();
 
+  /// Get weather (alerts) from NWS via API
   Future<void> getWeather(String stateCode) async {
     isLoading(true);
+
     final res = await http.get(Uri(scheme:"https", host: "api.weather.gov", path:"alerts/active/area/$stateCode"), headers: {'User-Agent':'flutter'});
     if(res.statusCode != 200){
       setResult(List.empty(), "Error getting alerts for $stateCode");
       isLoading(false);
       return;
     }
+
     final map = jsonDecode(res.body);
     final List features = map["features"];
 
-    setResult(List.generate(features.length, (index) => Alert.fromJson(features[index]["properties"]!)),
-    "Found ${features.length} alerts for $stateCode");
+    setResult(List.generate(features.length,
+            (index) => Alert.fromJson(features[index]["properties"]!)
+    ),
+      "Found ${features.length} alerts for $stateCode");
     isLoading(false);
   }
 
+  /// Load alerts and status text
   void setResult(List<Alert> alerts, String status) {
     setState((){
       _statusText = status;
@@ -63,12 +69,15 @@ class _MyHomePageState extends State<MyHomePage> {
       _alerts.addAll(alerts);
     });
   }
+
+  /// Update is loading for showing progress indicator on the UI
   void isLoading(bool isBusy) {
     setState((){
       _isBusy = isBusy;
     });
   }
 
+  /// Reset view to initial state
   void reset(){
     setState((){
       _isBusy = false;
