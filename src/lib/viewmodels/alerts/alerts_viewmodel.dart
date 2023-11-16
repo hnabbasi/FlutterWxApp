@@ -43,7 +43,7 @@ class AlertsViewModel extends ChangeNotifier {
   Future<void> getAlerts(String stateCode) async {
     try{
       isBusy = true;
-      alerts = await alertService.geAlerts(stateCode.toUpperCase());
+      alerts = await alertService.getAlerts(stateCode.toUpperCase());
       status = alerts.isNotEmpty
           ? "Found ${alerts.length} active alerts"
           : "No active alerts found";

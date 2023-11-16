@@ -9,7 +9,7 @@ import 'package:flutter_wx/configs/api.dart';
 class AlertService {
 
   /// Get alerts for give state code (e.g. TX)
-  Future<List<Alert>> geAlerts(String stateCode) async {
+  Future<List<Alert>> getAlerts(String stateCode) async {
     final res = await http.get(Uri(scheme:Api.scheme, host: Api.host, path:"${Api.alerts}/$stateCode"));
     if(res.statusCode != 200){
       return List.empty();
